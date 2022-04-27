@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from tqdm import tqdm
+from utils import image_transform
 
 def train(model, criterion, train_loader,val_loader, optimizer, num_epochs,device):
     """Simple training loop for a PyTorch model.""" 
@@ -91,3 +92,64 @@ def train(model, criterion, train_loader,val_loader, optimizer, num_epochs,devic
     # torch.save(model.state_dict(), 'model.pth')
     percent = 100. * correct / len(train_loader.dataset)
     return model, percent, val_loss, val_acc, train_loss, train_acc
+
+
+
+def train_simCLR(model, criterion, train_loader, optimizer, num_epochs,device):
+    """Simple training loop for the simCLR model""" 
+
+    
+    train_loss = []
+    total_step = len(train_loader)
+    
+    # Make sure model is in training mode.
+    model.train()
+    
+    # Move model to the device (CPU or GPU).
+    model.to(device)
+    
+    # Exponential moving average of the loss.
+    ema_loss = None
+    
+    # Loop over epochs
+    
+    for epoch in tqdm(range(num_epochs)):
+      running_loss = 0.0
+      correct = 0
+      total = 0
+        
+      # Loop over data.
+      for data_train in train_loader:
+
+          print(data_train)
+
+          data,_=data_train
+
+          # Get image embeddings
+          emb1 = image_transform(data.to(device))
+          emb2 = image_transform(data.to(device))
+ 
+            
+          # Forward pass.
+          output_1 = model(emb1)
+          output_2 = model(emb2)
+
+          loss = criterion(output_1, output_2)
+          
+          # Backward pass.
+          optimizer.zero_grad()
+          loss.backward()
+          optimizer.step()
+
+          running_loss +=loss.item()
+        
+          
+      print('Train Epoch: {} \tLoss: {:.6f}'.format(
+            epoch, running_loss/total_step),
+      )
+
+    torch.save(model.state_dict(), './model/simCLR_representations.ckpt')
+
+      
+
+    return model, train_loss
