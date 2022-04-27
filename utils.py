@@ -26,3 +26,17 @@ def plot(train_loss,val_loss):
     plt.plot(train_loss, label="train_loss")
     plt.legend()
     plt.show()
+
+
+def image_transform(img):
+    
+    aug_transforms = transforms.Compose([
+                                        transforms.RandomResizedCrop(32),
+                                        transforms.RandomHorizontalFlip(0.5),
+                                        transforms.RandomApply([transforms.GaussianBlur(0.1*32)], p=0.5), 
+                                        transforms.RandomApply([transforms.ColorJitter(0.5, 0.5, 0.5, 0.2)], p=0.8),
+                                        transforms.RandomGrayscale(p=0.2),
+                                        
+                                             ])
+    
+    return aug_transforms(img)
