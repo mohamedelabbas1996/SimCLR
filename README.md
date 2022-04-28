@@ -74,7 +74,7 @@ $python3 predict.py --image_path "./data/Images/cat.0.jpg"
 
 # Contributors #
 
-* [Allassan]()
+* [Allassan](https://github.com/matzolla)
 * [Mohamed Elabass](https://github.com/mohammedelabbas)
 * [Fanta SOUMAHORO](https://github.com/soumfatim)
 * [Amel Abdelraheem](https://github.com/AmelxJamal)
