@@ -147,9 +147,9 @@ def train_simCLR(model, criterion, train_loader, optimizer, num_epochs,device):
       print('Train Epoch: {} \tLoss: {:.6f}'.format(
             epoch, running_loss/total_step),
       )
-
-    torch.save(model.state_dict(), './model/simCLR_representations.ckpt')
+    path = './model/simCLR_representations.ckpt'    
+    torch.save(model.state_dict(), path)
 
       
 
-    return model, train_loss
+    return model, train_loss,path
