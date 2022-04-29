@@ -19,13 +19,14 @@ def resnet_simCLR():
     model= torchvision.models.resnet50(pretrained = True)
     for param in model.parameters():
         param.requires_grad = True
-
+    model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(3, 3), bias=False)
+    model.maxpool = nn.Identity()
     model.fc = nn.Sequential(
-        nn.Linear(2048, 2048),
-        nn.ReLU(),
-        nn.Linear(2048,128)
-    )
+    nn.Linear(2048, 2048),
+    nn.ReLU(),
+    nn.Linear(2048, 128))    
 
+  
     return model
 
 
