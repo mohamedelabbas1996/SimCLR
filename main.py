@@ -32,9 +32,8 @@ if mains_args["model_name"].lower()=='resnet':
 
     model=resnet()
     criterion= nn.CrossEntropyLoss()
-    lr = 0.075 * math.sqrt(64)
-    base_optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    optimizer = LARS(optimizer=base_optimizer, eps=1e-8, trust_coef=0.001)
+    optimizer = torch.optim.Adam(model_simCLR.parameters(), lr=args.lr, weight_decay=args.wd)
+    
     model_trained, percent, val_loss, val_acc, train_loss, train_acc= train.train(model, criterion, train_loader, val_loader, optimizer, num_epochs, device)
     plot(train_loss,val_loss)
 
@@ -46,7 +45,9 @@ elif mains_args["model_name"].lower() == 'simclr':
 
     model_simCLR = resnet_simCLR()
     criterion = ContrastiveLoss()
-    optimizer = torch.optim.Adam(model_simCLR.parameters(), lr=args.lr, weight_decay=args.wd)
+    lr = 0.075 * math.sqrt(args.bs)
+    base_optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = LARS(optimizer=base_optimizer, eps=1e-8, trust_coef=0.001)
     simCLR_trained, simCLR_train_loss,path= train.train_simCLR(model_simCLR, criterion, train_loader, optimizer, num_epochs, device)
 
 # fine-tune simCLR
