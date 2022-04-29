@@ -43,11 +43,11 @@ elif mains_args["model_name"].lower() == 'simclr':
     model_simCLR = resnet_simCLR()
     criterion = Contrastive_loss()
     optimizer = torch.optim.Adam(model_simCLR.parameters(), lr=args.lr, weight_decay=args.wd)
-    simCLR_trained, simCLR_train_loss= train.train_simCLR(model_simCLR, criterion, train_loader, optimizer, num_epochs, device)
+    simCLR_trained, simCLR_train_loss,path= train.train_simCLR(model_simCLR, criterion, train_loader, optimizer, num_epochs, device)
 
 # fine-tune simCLR
 
-    path = '.pth'
+   
     model_simCLR_classifier = resnet_simCLR_classification(path)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model_simCLR_classifier.parameters(), lr=args.lr, weight_decay=args.wd)
