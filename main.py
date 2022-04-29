@@ -17,6 +17,8 @@ batch_size= args.bs
 # print(val_loader)
 ### Model
 import argparse
+from torchlars import LARS
+import math
 parser= argparse.ArgumentParser()
 parser.add_argument('-m','--model_name',help='this is the name of the model',type=str,required=True)
 
@@ -30,7 +32,9 @@ if mains_args["model_name"].lower()=='resnet':
 
     model=resnet()
     criterion= nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.wd)
+    lr = 0.075 * math.sqrt(64)
+    base_optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = LARS(optimizer=base_optimizer, eps=1e-8, trust_coef=0.001)
     model_trained, percent, val_loss, val_acc, train_loss, train_acc= train.train(model, criterion, train_loader, val_loader, optimizer, num_epochs, device)
     plot(train_loss,val_loss)
 
