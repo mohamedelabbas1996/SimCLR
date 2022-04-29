@@ -7,7 +7,7 @@ from models import resnet, resnet_simCLR, resnet_simCLR_classification
 import torch.nn as nn
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 import train
-import  Contrastive_loss
+from Contrastive_loss import ContrastiveLoss
 
 
 path= args.path
@@ -41,7 +41,7 @@ elif mains_args["model_name"].lower() == 'simclr':
 # self-supervised model
 
     model_simCLR = resnet_simCLR()
-    criterion = Contrastive_loss()
+    criterion = ContrastiveLoss()
     optimizer = torch.optim.Adam(model_simCLR.parameters(), lr=args.lr, weight_decay=args.wd)
     simCLR_trained, simCLR_train_loss,path= train.train_simCLR(model_simCLR, criterion, train_loader, optimizer, num_epochs, device)
 
